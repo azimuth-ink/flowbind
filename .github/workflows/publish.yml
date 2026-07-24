@@ -2,9 +2,13 @@ name: publish
 # Publishes the polydiagram package to PyPI via Trusted Publishing (OIDC).
 # No API tokens are stored in the repo or its secrets; PyPI trusts this
 # workflow identity directly (configure under PyPI -> Publishing).
+#
+# Trigger note: this fires on tag push, NOT on release-published, because
+# releases created by release.yml via GITHUB_TOKEN cannot trigger workflows
+# (GitHub's recursion guard).
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
   workflow_dispatch: {}
 
 permissions:
