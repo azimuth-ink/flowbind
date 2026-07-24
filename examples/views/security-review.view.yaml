@@ -1,0 +1,17 @@
+apiVersion: diagram.spec/v0.1
+kind: View
+metadata:
+  id: security-review
+  name: "Security review"
+  version: 1.0.0
+  owner: team-security
+  description: "Identical layout to the architect's canvas; network + identity facets on."
+base: examples/topology/retail-quote.topology.yaml
+layers:
+  - examples/layers/network.layer.yaml
+  - examples/layers/authn.layer.yaml
+  - examples/layers/authz.layer.yaml
+display:
+  isolate: net-transport
+  edge_badges: [ "net-transport:protocol", "net-transport:port", "net-transport:tls.mode" ]
+  node_badges: [ "authn:mechanism" ]

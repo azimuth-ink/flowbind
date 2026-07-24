@@ -1,0 +1,22 @@
+apiVersion: diagram.spec/v0.1
+kind: Layer
+metadata:
+  id: net-transport
+  name: "Network / transport"
+  version: 1.0.0
+  owner: team-network
+  domain: network
+base: examples/topology/retail-quote.topology.yaml
+imports:
+  edge-tls:      { path: examples/fragments/tls.fragment.yaml, fragment: edge-tls }
+  internal-mtls: { path: examples/fragments/tls.fragment.yaml, fragment: internal-mtls }
+node_annotations:
+  - { ref: api-gw, data: { zone: dmz, exposure: public } }
+  - { ref: notify, data: { zone: egress, exposure: restricted } }
+edge_annotations:
+  - { ref: e1, data: { $use: edge-tls,      protocol: https, port: 443 } }
+  - { ref: e2, data: { $use: internal-mtls, protocol: http2, port: 8443 } }
+  - { ref: e3, data: { $use: internal-mtls, protocol: grpc,  port: 8443 } }
+  - { ref: e4, data: { transport: tcp, protocol: https, port: 443, tls: { mode: tls, min_version: "1.2" } } }
+  # Mail egress: submission/587 with STARTTLS (smtps/465 is the implicit-TLS alternative).
+  - { ref: e5, data: { transport: tcp, protocol: submission, port: 587, tls: { mode: starttls, min_version: "1.2" } } }

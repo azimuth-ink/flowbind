@@ -1,0 +1,14 @@
+# Reusable TLS baselines, pulled into layers via imports + $use.
+# Fragments are single-level: no $use inside a fragment.
+edge-tls:
+  transport: tcp
+  tls:
+    mode: tls
+    min_version: "1.2"
+    certificate: { type: x509, ref: certs/public-edge, issuer: public-ca, rotation_days: 90 }
+internal-mtls:
+  transport: tcp
+  tls:
+    mode: mtls
+    min_version: "1.3"
+    certificate: { type: x509, ref: certs/mesh-identity, issuer: internal-ca, rotation_days: 30 }

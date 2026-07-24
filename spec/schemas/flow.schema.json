@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://azimuth.ink/schemas/flow.spec/v0.1/flow.schema.json",
+  "title": "Flow v0.1",
+  "description": "A declared, governed business flow: a named, versioned, owner-attributed path over a typed component graph, carrying SLOs and telemetry requirements. See spec/01-flow-descriptor.md and the companion paper. Referential checks (component resolution, next-ref integrity, step-id uniqueness) are performed by the validator, not this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "flow.spec/v0.1" },
+    "kind": { "const": "Flow" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "version", "owner", "criticality"],
+      "properties": {
+        "id": { "$ref": "#/$defs/kebab" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "version": { "$ref": "#/$defs/semver" },
+        "owner": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["business", "technical"],
+          "properties": {
+            "business": { "$ref": "#/$defs/kebab" },
+            "technical": { "$ref": "#/$defs/kebab" }
+          }
+        },
+        "criticality": { "enum": ["tier-1", "tier-2", "tier-3"] },
+        "description": { "type": "string", "maxLength": 1000 }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "steps", "telemetry"],
+      "properties": {
+        "trigger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "enum": ["http", "event", "schedule", "user_interaction"] },
+            "description": { "type": "string", "maxLength": 500 }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "component", "op"],
+            "properties": {
+              "id": { "$ref": "#/$defs/stepId" },
+              "component": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z][a-z0-9_-]*)+$",
+                "description": "Namespaced component id resolving in the component registry (e.g. payments.quote-engine)."
+              },
+              "op": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$",
+                "description": "The operation/port this step exercises on the component."
+              },
+              "kind": {
+                "enum": ["sync", "async", "fanout", "choice"],
+                "default": "sync"
+              },
+              "next": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "$ref": "#/$defs/stepId" },
+                "description": "Successor step ids. Omitted = linear (next list item). Required for fanout/choice; validator enforces."
+              }
+            }
+          }
+        },
+        "slos": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "availability": { "type": "number", "minimum": 0, "maximum": 100 },
+            "latency_p95_ms": { "type": "integer", "minimum": 1, "description": "Trigger to synchronous frontier." },
+            "async_completion_p99_s": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "telemetry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_signals"],
+          "properties": {
+            "required_signals": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["trace", "metric", "log"] }
+            },
+            "attribute_namespace": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_.]*$",
+              "default": "flow"
+            },
+            "sampling_floor": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Minimum effective trace sampling rate for coverage evaluation of this flow."
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "kebab": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "maxLength": 63 },
+    "semver": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+    "stepId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$" }
+  }
+}

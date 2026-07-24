@@ -1,0 +1,20 @@
+apiVersion: diagram.spec/v0.1
+kind: Topology
+metadata:
+  id: retail-quote-topology
+  name: "Retail quote platform"
+  version: 1.0.0
+  owner: team-quotes
+nodes:
+  - { id: api-gw,  component: edge.api-gateway,     label: "API Gateway",   group: dmz,      position: { x: 0,   y: 100 } }
+  - { id: session, component: identity.session,      label: "Session",       group: internal, position: { x: 220, y: 100 } }
+  - { id: quote,   component: payments.quote-engine, label: "Quote Engine",  group: internal, position: { x: 440, y: 100 } }
+  - { id: risk,    component: risk.limits-check,     label: "Limits Check",  group: internal, position: { x: 660, y: 100 } }
+  - { id: docs,    component: docs.render,           label: "Doc Render",    group: internal, position: { x: 660, y: 280 } }
+  - { id: notify,  component: notify.customer,       label: "Notify",        group: egress,   position: { x: 440, y: 280 } }
+edges:
+  - { id: e1, from: api-gw,  to: session, label: "authorize" }
+  - { id: e2, from: session, to: quote,   label: "price" }
+  - { id: e3, from: quote,   to: risk,    label: "evaluate" }
+  - { id: e4, from: risk,    to: docs,    label: "generate" }
+  - { id: e5, from: docs,    to: notify,  label: "deliver" }

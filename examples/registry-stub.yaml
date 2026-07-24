@@ -1,0 +1,10 @@
+# Minimal registry stub for validator demonstration.
+# In a full deployment this is the governed component registry
+# (one file per component, typed ports, materialization block).
+components:
+  - edge.api-gateway
+  - identity.session
+  - payments.quote-engine
+  - risk.limits-check
+  - docs.render
+  - notify.customer

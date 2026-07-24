@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://azimuth.ink/schemas/diagram.spec/v0.1/diagram.schema.json",
+  "title": "Diagram language v0.1 — Topology | Layer | View",
+  "description": "Layered architecture diagram language. A Topology owns node/edge identity and layout. Layers are separately owned overlay documents that annotate the SAME node/edge ids by reference (never redefining topology). Views compose a base plus a layer set plus display state as a versioned render preset. All cross-file references are repo-root-relative POSIX paths: no leading '/', no '..' segments, no URLs. Fragment imports use $use with shallow merge (local keys win, arrays replace). Envelope validation lives here; per-domain annotation data is validated by tools/validate_diagram.py against the domain profiles in $defs (network / authn / authz; x-* domains via metadata.annotation_schema). The 'flow' domain is reserved: flows project as a DERIVED layer from flow.spec documents and are never authored as Layer files.",
+  "oneOf": [
+    { "$ref": "#/$defs/topology" },
+    { "$ref": "#/$defs/layer" },
+    { "$ref": "#/$defs/view" }
+  ],
+  "$defs": {
+    "kebab": { "type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "maxLength": 63 },
+    "semver": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+    "repoPath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*\\.\\.)[A-Za-z0-9._/-]+\\.(ya?ml|json)$",
+      "description": "Repo-root-relative POSIX path; '..' and absolute paths rejected (also re-checked by the validator)."
+    },
+    "elementId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,31}$" },
+    "componentRef": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*(\\.[a-z][a-z0-9_-]*)+$",
+      "description": "Namespaced component id; the same namespace flow.spec steps reference."
+    },
+    "metadataCore": {
+      "type": "object",
+      "required": ["id", "name", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/kebab" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "version": { "$ref": "#/$defs/semver" },
+        "owner": { "$ref": "#/$defs/kebab" },
+        "description": { "type": "string", "maxLength": 1000 }
+      }
+    },
+
+    "topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiVersion", "kind", "metadata", "nodes", "edges"],
+      "properties": {
+        "apiVersion": { "const": "diagram.spec/v0.1" },
+        "kind": { "const": "Topology" },
+        "metadata": {
+          "allOf": [{ "$ref": "#/$defs/metadataCore" }],
+          "unevaluatedProperties": false
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "component", "position"],
+            "properties": {
+              "id": { "$ref": "#/$defs/elementId" },
+              "component": { "$ref": "#/$defs/componentRef" },
+              "label": { "type": "string", "maxLength": 80 },
+              "group": { "$ref": "#/$defs/kebab" },
+              "position": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "y"],
+                "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+              }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "from", "to"],
+            "properties": {
+              "id": { "$ref": "#/$defs/elementId" },
+              "from": { "$ref": "#/$defs/elementId" },
+              "to": { "$ref": "#/$defs/elementId" },
+              "label": { "type": "string", "maxLength": 80 }
+            }
+          }
+        }
+      }
+    },
+
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiVersion", "kind", "metadata", "base"],
+      "properties": {
+        "apiVersion": { "const": "diagram.spec/v0.1" },
+        "kind": { "const": "Layer" },
+        "metadata": {
+          "allOf": [
+            { "$ref": "#/$defs/metadataCore" },
+            {
+              "type": "object",
+              "required": ["domain"],
+              "properties": {
+                "domain": {
+                  "type": "string",
+                  "pattern": "^(network|authn|authz|x-[a-z][a-z0-9-]*)$",
+                  "description": "Annotation vocabulary this layer speaks. 'flow' is reserved for the derived flow projection. Multiple layers per domain are permitted (e.g., network-current vs network-target); Views select by layer id."
+                },
+                "annotation_schema": {
+                  "$ref": "#/$defs/repoPath",
+                  "description": "Required for x-* domains: JSON Schema the merged annotation data must satisfy."
+                }
+              }
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "base": { "$ref": "#/$defs/repoPath" },
+        "imports": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "$ref": "#/$defs/kebab" },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "fragment"],
+            "properties": {
+              "path": { "$ref": "#/$defs/repoPath" },
+              "fragment": { "$ref": "#/$defs/kebab" }
+            }
+          },
+          "description": "Named fragment imports. Fragments are single-level (a fragment file must not itself use $use). Merge: fragment first, local keys override, arrays replace."
+        },
+        "defaults": {
+          "type": "object",
+          "description": "Layer-wide annotation defaults, merged beneath every annotation (defaults < fragment < local)."
+        },
+        "node_annotations": { "$ref": "#/$defs/annotationList" },
+        "edge_annotations": { "$ref": "#/$defs/annotationList" }
+      }
+    },
+
+    "annotationList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "data"],
+        "properties": {
+          "ref": { "$ref": "#/$defs/elementId" },
+          "data": {
+            "type": "object",
+            "description": "Domain annotation. May contain $use: <import-name>. The MERGED result (defaults+fragment+local, $use removed) is validated against the domain profile."
+          }
+        }
+      }
+    },
+
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["apiVersion", "kind", "metadata", "base", "layers"],
+      "properties": {
+        "apiVersion": { "const": "diagram.spec/v0.1" },
+        "kind": { "const": "View" },
+        "metadata": {
+          "allOf": [{ "$ref": "#/$defs/metadataCore" }],
+          "unevaluatedProperties": false
+        },
+        "base": { "$ref": "#/$defs/repoPath" },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/repoPath" },
+          "description": "Layer documents; each layer's base MUST equal this view's base (validator-enforced)."
+        },
+        "display": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "isolate": {
+              "$ref": "#/$defs/kebab",
+              "description": "Layer id to isolate on open: identical layout, only that layer's annotations shown; edges without annotations in the isolated layer render dimmed."
+            },
+            "edge_badges": { "$ref": "#/$defs/badgeList" },
+            "node_badges": { "$ref": "#/$defs/badgeList" }
+          }
+        }
+      }
+    },
+    "badgeList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*:[a-z][a-z0-9_.]*$",
+        "description": "'<layer-id>:<dotted.path>' into that layer's annotation data, e.g. 'net-transport:tls.mode'."
+      }
+    },
+
+    "domain_network_annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "transport": { "enum": ["tcp", "udp", "unix"] },
+        "protocol": { "enum": ["http", "https", "http2", "grpc", "websocket", "wss", "smtp", "smtps", "submission", "amqp", "mqtt", "dns", "sql", "custom"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "tls": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "enum": ["none", "tls", "starttls", "mtls"] },
+            "min_version": { "enum": ["1.0", "1.1", "1.2", "1.3"] },
+            "certificate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "ref"],
+              "properties": {
+                "type": { "const": "x509" },
+                "ref": { "type": "string", "pattern": "^[a-z0-9._/-]+$", "description": "Logical certificate reference (registry/secret path) — never inline material." },
+                "issuer": { "$ref": "#/$defs/kebab" },
+                "rotation_days": { "type": "integer", "minimum": 1 },
+                "san": { "type": "array", "minItems": 1, "items": { "type": "string", "maxLength": 253 } }
+              }
+            }
+          }
+        },
+        "zone": { "$ref": "#/$defs/kebab" },
+        "exposure": { "enum": ["public", "internal", "restricted"] },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "description": "Edge annotations: protocol required (validator rule DG4); mtls requires certificate (DG3). Node annotations: typically zone/exposure."
+    },
+
+    "domain_authn_annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mechanism": { "enum": ["none", "iap", "oidc", "oauth2", "saml", "service_account", "workload_identity", "api_key", "mtls_cert", "jwt", "basic", "custom"] },
+        "provider": { "enum": ["gcp-iam", "aws-iam", "azure-ad", "okta", "auth0", "keycloak", "custom"] },
+        "principal": { "type": "string", "pattern": "^[A-Za-z0-9._@-]+$", "maxLength": 200, "description": "Logical identity (end-user class or service-account name) — no real credentials." },
+        "credential_ref": { "type": "string", "pattern": "^[a-z0-9._/-]+$", "description": "Secret-manager style reference; literals structurally impossible (no whitespace, no '=')." },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["mechanism"]
+    },
+
+    "domain_authz_annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "model": { "enum": ["iam_roles", "rbac", "abac", "acl", "policy_engine", "none"] },
+        "enforcement_point": { "enum": ["gateway", "service", "mesh", "database", "custom"] },
+        "policy_ref": { "type": "string", "pattern": "^[a-z0-9._/-]+$" },
+        "roles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9._-]*$", "maxLength": 120 } },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["model"]
+    }
+  }
+}

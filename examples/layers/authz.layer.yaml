@@ -1,0 +1,14 @@
+apiVersion: diagram.spec/v0.1
+kind: Layer
+metadata:
+  id: authz
+  name: "Authorization"
+  version: 1.0.0
+  owner: team-security
+  domain: authz
+base: examples/topology/retail-quote.topology.yaml
+node_annotations:
+  - { ref: quote, data: { model: iam_roles, enforcement_point: service, roles: [pricing.invoker] } }
+  - { ref: risk,  data: { model: iam_roles, enforcement_point: service, roles: [risk.evaluator] } }
+edge_annotations:
+  - { ref: e5, data: { model: policy_engine, enforcement_point: gateway, policy_ref: policies/mail-egress } }

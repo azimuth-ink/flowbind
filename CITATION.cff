@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this specification or tooling, please cite it as below."
+title: "FlowBind: Business Flows as Governed Architecture Artifacts with Telemetry Binding"
+type: software
+authors:
+  - family-names: Gray
+    given-names: Jeff
+    orcid: "https://orcid.org/0009-0005-6796-6576"
+    affiliation: Independent
+version: 0.1.0
+date-released: 2026-07-19
+license: Apache-2.0
+repository-code: "https://github.com/azimuth-ink/flowbind"
+url: "https://azimuth.ink"
+keywords:
+  - software architecture
+  - observability
+  - architecture-as-code
+  - distributed tracing
+  - SLO
+  - conformance checking
+  - polymorphic diagram

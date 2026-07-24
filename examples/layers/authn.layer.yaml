@@ -1,0 +1,16 @@
+apiVersion: diagram.spec/v0.1
+kind: Layer
+metadata:
+  id: authn
+  name: "Authentication"
+  version: 1.0.0
+  owner: team-security
+  domain: authn
+base: examples/topology/retail-quote.topology.yaml
+node_annotations:
+  - { ref: api-gw, data: { mechanism: iap, provider: gcp-iam, principal: end-user } }
+edge_annotations:
+  - { ref: e2, data: { mechanism: service_account, provider: gcp-iam, principal: svc-session } }
+  - { ref: e3, data: { mechanism: service_account, provider: gcp-iam, principal: svc-quote } }
+  - { ref: e4, data: { mechanism: service_account, provider: gcp-iam, principal: svc-risk } }
+  - { ref: e5, data: { mechanism: api_key, credential_ref: secrets/mail-relay-key } }

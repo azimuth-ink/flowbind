@@ -1,0 +1,34 @@
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Gates
+        run: |
+          pip install jsonschema pyyaml
+          python3 tools/validate_flows.py --dir examples --registry examples/registry-stub.yaml
+          python3 tools/validate_diagram.py --root . examples/views/security-review.view.yaml --flows-dir examples
+      - name: Build source archive
+        run: git archive --format=zip -o "flowbind-${GITHUB_REF_NAME}.zip" HEAD
+      - name: Build paper PDF
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0
+          pip install weasyprint markdown
+          python3 tools/typeset_paper.py paper/polymorphic-diagram-flowbind-preprint.md "polymorphic-diagram-preprint-${GITHUB_REF_NAME}.pdf"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes \
+            "flowbind-${GITHUB_REF_NAME}.zip" \
+            "polymorphic-diagram-preprint-${GITHUB_REF_NAME}.pdf" \
+            paper/polymorphic-diagram-flowbind-preprint.md
