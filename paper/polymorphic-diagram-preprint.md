@@ -2,7 +2,7 @@
 
 **Jeff Gray** — Independent — [ORCID 0009-0005-6796-6576](https://orcid.org/0009-0005-6796-6576) — [azimuth.ink](https://azimuth.ink)
 
-*Preprint, v0.1 — July 2026. Intended for deposit on Zenodo (CC BY 4.0). Companion open specification and reference tooling: FlowBind (see Data & Code Availability).*
+*Preprint, v0.1 — July 2026. Intended for deposit on Zenodo (CC BY 4.0). Companion open specification and reference tooling: Polydiagram (see Data & Code Availability).*
 
 ---
 
@@ -218,7 +218,7 @@ The architecture diagram and the observability platform have been describing the
 
 ## Data & Code Availability
 
-The FlowBind open specification, JSON Schemas, reference validator, and examples accompany this paper at https://github.com/azimuth-ink/flowbind and are archived on Zenodo (concept DOI 10.5281/zenodo.21524083, resolving to the latest version). This paper builds on and extends the author's prior publication [Gray 2026]. Code: Apache-2.0. Paper: CC BY 4.0.
+The Polydiagram open specification, JSON Schemas, reference validator, and examples accompany this paper at https://github.com/azimuth-ink/polydiagram and are archived on Zenodo (concept DOI 10.5281/zenodo.21524083, resolving to the latest version). This paper builds on and extends the author's prior publication [Gray 2026]. Code: Apache-2.0. Paper: CC BY 4.0.
 
 ## Acknowledgments
 

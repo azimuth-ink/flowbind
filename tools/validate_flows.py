@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FlowBind reference validator.
+"""Polydiagram reference validator.
 
 Validates flow descriptors against the Flow v0.1 JSON Schema, then applies
 the referential checks the schema cannot express:

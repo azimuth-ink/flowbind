@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""FlowBind diagram validator (Topology / Layer / View).
+"""Polydiagram — diagram validator (Topology / Layer / View).
 
 Beyond envelope schema validation, enforces:
 

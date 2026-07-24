@@ -13,7 +13,7 @@
    git push origin v0.1.0
    ```
 3. The `release` workflow re-runs every gate, builds the source zip and the
-   paper PDF (from `paper/polymorphic-diagram-flowbind-preprint.md` via `tools/typeset_paper.py`), and publishes a
+   paper PDF (from `paper/polymorphic-diagram-preprint.md` via `tools/typeset_paper.py`), and publishes a
    GitHub Release with those assets.
 4. If the Zenodo–GitHub integration is enabled for this repository, Zenodo
    archives the release and mints a DOI automatically.
@@ -25,4 +25,4 @@ the README badge, and the paper's Data & Code Availability line so citations
 never go stale. After the first release: add the DOI to `CITATION.cff`
 (`doi:` field), replace the README badge placeholder with Zenodo's badge
 markdown, update the paper, and rebuild the PDF
-(`python3 tools/typeset_paper.py paper/polymorphic-diagram-flowbind-preprint.md polymorphic-diagram-preprint-vX_Y.pdf`).
+(`python3 tools/typeset_paper.py paper/polymorphic-diagram-preprint.md polymorphic-diagram-preprint-vX_Y.pdf`).

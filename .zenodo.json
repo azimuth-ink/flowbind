@@ -1,5 +1,5 @@
 {
-  "title": "FlowBind: Business Flows as Governed Architecture Artifacts with Telemetry Binding",
+  "title": "Polydiagram: Business Flows as Governed Architecture Artifacts with Telemetry Binding",
   "upload_type": "software",
   "description": "Open specification, JSON Schema, and reference validator for declaring business flows as governed architecture artifacts bound to runtime telemetry (flow.id/flow.step propagation, coverage constraint, bidirectional conformance, the polymorphic diagram as operational surface). Includes a layered diagram language: Topology/Layer/View documents with include semantics, domain profiles (network, authn, authz, extensible x-*), and a validator enforcing reference integrity and fragment merge \u2014 the same node layout rendering security, network, and identity views by toggling governed overlay files. Companion preprint included under paper/.",
   "creators": [

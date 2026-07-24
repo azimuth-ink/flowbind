@@ -1,17 +1,17 @@
 cff-version: 1.2.0
 message: "If you use this specification or tooling, please cite it as below."
-title: "FlowBind: Business Flows as Governed Architecture Artifacts with Telemetry Binding"
+title: "Polydiagram: Business Flows as Governed Architecture Artifacts with Telemetry Binding"
 type: software
 authors:
   - family-names: Gray
     given-names: Jeff
     orcid: "https://orcid.org/0009-0005-6796-6576"
     affiliation: Independent
-version: 0.1.0
-date-released: 2026-07-19
+version: 0.2.0
+date-released: 2026-07-24
 license: Apache-2.0
 doi: 10.5281/zenodo.21524083
-repository-code: "https://github.com/azimuth-ink/flowbind"
+repository-code: "https://github.com/azimuth-ink/polydiagram"
 url: "https://azimuth.ink"
 keywords:
   - software architecture

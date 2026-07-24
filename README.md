@@ -1,12 +1,12 @@
-# FlowBind — Business Flows as Governed Architecture Artifacts
+# Polydiagram — Business Flows as Governed Architecture Artifacts
 
-*Working name; open specification, v0.1 draft.*
+*Open specification, v0.1 draft.*
 
-[![validate](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml)
+[![validate](https://github.com/azimuth-ink/polydiagram/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/azimuth-ink/polydiagram/actions/workflows/validate.yml)
 [![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21524083.svg)](https://doi.org/10.5281/zenodo.21524083)
 
-FlowBind makes **declared business flows** first-class artifacts in an
+Polydiagram makes **declared business flows** first-class artifacts in an
 architecture-as-code system and **binds them to runtime telemetry by
 construction**. A flow is a named, versioned, owner-attributed path through a
 typed component graph, carrying SLOs and criticality. Its identity
@@ -28,7 +28,7 @@ typed component graph, carrying SLOs and criticality. Its identity
   nondeterminism level render onto the *reviewed* architecture canvas, because the
   diagram, the flows, and the telemetry share identity.
 
-The full argument is in the paper: [`paper/polymorphic-diagram-flowbind-preprint.md`](paper/polymorphic-diagram-flowbind-preprint.md).
+The full argument is in the paper: [`paper/polymorphic-diagram-preprint.md`](paper/polymorphic-diagram-preprint.md).
 
 Builds on and extends: *Flow-Based Telemetry Coverage: A Method for Measuring and
 Governing Observability by Business-Flow Consequence* — Gray, 2026,
