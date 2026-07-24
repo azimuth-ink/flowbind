@@ -16,4 +16,4 @@ are mapped into this package at build time; ``spec/schemas/`` is likewise
 mapped to ``polydiagram/schemas/``.
 """
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"

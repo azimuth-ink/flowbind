@@ -3,7 +3,7 @@
 *Open specification, v0.1 draft.*
 
 [![validate](https://github.com/azimuth-ink/polydiagram/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/azimuth-ink/polydiagram/actions/workflows/validate.yml)
-[![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
+[![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](https://github.com/azimuth-ink/polydiagram/blob/main/LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21524083.svg)](https://doi.org/10.5281/zenodo.21524083)
 
 Polydiagram makes **declared business flows** first-class artifacts in an
@@ -28,7 +28,7 @@ typed component graph, carrying SLOs and criticality. Its identity
   nondeterminism level render onto the *reviewed* architecture canvas, because the
   diagram, the flows, and the telemetry share identity.
 
-The full argument is in the paper: [`paper/polymorphic-diagram-preprint.md`](paper/polymorphic-diagram-preprint.md).
+The full argument is in the paper: [`paper/polymorphic-diagram-preprint.md`](https://github.com/azimuth-ink/polydiagram/blob/main/paper/polymorphic-diagram-preprint.md).
 
 Builds on and extends: *Flow-Based Telemetry Coverage: A Method for Measuring and
 Governing Observability by Business-Flow Consequence* — Gray, 2026,

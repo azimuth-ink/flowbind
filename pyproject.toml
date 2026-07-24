@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "polydiagram"
-version = "0.2.1"
+version = "0.2.2"
 description = "Reference validators for the Polydiagram open specification: business flows as governed architecture artifacts with telemetry binding (flow descriptors + layered Topology/Layer/View diagrams)."
 readme = "README.md"
 requires-python = ">=3.10"
