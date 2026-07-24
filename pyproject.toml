@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polydiagram"
+version = "0.2.1"
+description = "Reference validators for the Polydiagram open specification: business flows as governed architecture artifacts with telemetry binding (flow descriptors + layered Topology/Layer/View diagrams)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Jeff Gray", email = "jeff@azimuth.ink" },
+]
+keywords = [
+  "architecture-as-code",
+  "observability",
+  "distributed-tracing",
+  "slo",
+  "diagrams",
+  "conformance",
+  "polymorphic-diagram",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "jsonschema>=4.21",
+  "pyyaml>=6.0",
+]
+
+[project.urls]
+Homepage = "https://azimuth.ink"
+Repository = "https://github.com/azimuth-ink/polydiagram"
+Archive = "https://doi.org/10.5281/zenodo.21524083"
+
+[project.scripts]
+polydiagram-flows = "polydiagram.validate_flows:main"
+polydiagram-diagram = "polydiagram.validate_diagram:main"
+
+# Single source of truth: the canonical code stays in tools/ and the normative
+# schemas stay in spec/schemas/ (where the spec documents reference them).
+# The wheel is assembled by mapping those same files into the package at
+# build time — nothing is duplicated in the repo.
+[tool.hatch.build.targets.wheel]
+packages = ["src/polydiagram"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"tools/validate_flows.py" = "polydiagram/validate_flows.py"
+"tools/validate_diagram.py" = "polydiagram/validate_diagram.py"
+"spec/schemas/flow.schema.json" = "polydiagram/schemas/flow.schema.json"
+"spec/schemas/diagram.schema.json" = "polydiagram/schemas/diagram.schema.json"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/polydiagram",
+  "tools",
+  "spec",
+  "examples",
+  "README.md",
+  "LICENSE",
+  "CITATION.cff",
+]

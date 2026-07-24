@@ -37,7 +37,16 @@ except ImportError as e:  # pragma: no cover
     sys.exit(2)
 
 TOOLS = pathlib.Path(__file__).resolve().parent
-SCHEMA = json.loads((TOOLS.parent / "spec" / "schemas" / "diagram.schema.json").read_text())
+
+def _schema_path(name: str) -> pathlib.Path:
+    """Resolve a schema in both layouts: installed package (schemas/ beside
+    this module) and repo checkout (tools/../spec/schemas/)."""
+    for cand in (TOOLS / "schemas" / name, TOOLS.parent / "spec" / "schemas" / name):
+        if cand.exists():
+            return cand
+    raise SystemExit(f"schema not found: {name} (looked in package and repo layouts)")
+
+SCHEMA = json.loads(_schema_path("diagram.schema.json").read_text())
 DOMAIN_PROFILES = {
     name: {"$defs": SCHEMA["$defs"], "$ref": f"#/$defs/domain_{name}_annotation"}
     for name in ("network", "authn", "authz")

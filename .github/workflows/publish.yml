@@ -1,0 +1,50 @@
+name: publish
+# Publishes the polydiagram package to PyPI via Trusted Publishing (OIDC).
+# No API tokens are stored in the repo or its secrets; PyPI trusts this
+# workflow identity directly (configure under PyPI -> Publishing).
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: { python-version: "3.12" }
+      - name: Gates (same as validate)
+        run: |
+          pip install jsonschema pyyaml
+          python3 tools/validate_flows.py --dir examples --registry examples/registry-stub.yaml
+          python3 tools/validate_diagram.py --root . examples/views/security-review.view.yaml --flows-dir examples
+      - name: Build sdist + wheel
+        run: |
+          pip install build
+          python -m build
+      - name: Smoke test the wheel
+        run: |
+          pip install dist/*.whl
+          polydiagram-flows examples/retail-quote.flow.yaml --registry examples/registry-stub.yaml
+          polydiagram-diagram --root . examples/views/security-review.view.yaml --flows-dir examples
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write   # OIDC token for PyPI Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

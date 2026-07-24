@@ -7,7 +7,7 @@ authors:
     given-names: Jeff
     orcid: "https://orcid.org/0009-0005-6796-6576"
     affiliation: Independent
-version: 0.2.0
+version: 0.2.1
 date-released: 2026-07-24
 license: Apache-2.0
 doi: 10.5281/zenodo.21524083

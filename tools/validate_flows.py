@@ -29,7 +29,17 @@ except ImportError as e:  # pragma: no cover
     print(f"missing dependency: {e.name} (pip install jsonschema pyyaml)", file=sys.stderr)
     sys.exit(2)
 
-SCHEMA_PATH = pathlib.Path(__file__).resolve().parents[1] / "spec" / "schemas" / "flow.schema.json"
+_HERE = pathlib.Path(__file__).resolve().parent
+
+def _schema_path(name: str) -> pathlib.Path:
+    """Resolve a schema in both layouts: installed package (schemas/ beside
+    this module) and repo checkout (tools/../spec/schemas/)."""
+    for cand in (_HERE / "schemas" / name, _HERE.parent / "spec" / "schemas" / name):
+        if cand.exists():
+            return cand
+    raise SystemExit(f"schema not found: {name} (looked in package and repo layouts)")
+
+SCHEMA_PATH = _schema_path("flow.schema.json")
 
 
 def load_registry(path):
