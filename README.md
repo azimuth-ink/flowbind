@@ -2,7 +2,7 @@
 
 *Working name; open specification, v0.1 draft.*
 
-[![validate](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml/badge.svg)](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml)
+[![validate](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml)
 [![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
 <!-- DOI badge: add after first release — see RELEASING.md -->
 
