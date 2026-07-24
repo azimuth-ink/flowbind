@@ -218,7 +218,7 @@ The architecture diagram and the observability platform have been describing the
 
 ## Data & Code Availability
 
-The FlowBind open specification, JSON Schemas, reference validator, and examples accompany this paper at https://github.com/azimuth-ink/flowbind and are archived on Zenodo (DOI minted at release). This paper builds on and extends the author's prior publication [Gray 2026]. Code: Apache-2.0. Paper: CC BY 4.0.
+The FlowBind open specification, JSON Schemas, reference validator, and examples accompany this paper at https://github.com/azimuth-ink/flowbind and are archived on Zenodo (concept DOI 10.5281/zenodo.21524083, resolving to the latest version). This paper builds on and extends the author's prior publication [Gray 2026]. Code: Apache-2.0. Paper: CC BY 4.0.
 
 ## Acknowledgments
 

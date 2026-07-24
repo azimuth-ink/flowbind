@@ -4,7 +4,7 @@
 
 [![validate](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml/badge.svg?branch=main)](https://github.com/azimuth-ink/flowbind/actions/workflows/validate.yml)
 [![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
-<!-- DOI badge: add after first release — see RELEASING.md -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21524083.svg)](https://doi.org/10.5281/zenodo.21524083)
 
 FlowBind makes **declared business flows** first-class artifacts in an
 architecture-as-code system and **binds them to runtime telemetry by

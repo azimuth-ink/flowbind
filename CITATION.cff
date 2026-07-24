@@ -10,6 +10,7 @@ authors:
 version: 0.1.0
 date-released: 2026-07-19
 license: Apache-2.0
+doi: 10.5281/zenodo.21524083
 repository-code: "https://github.com/azimuth-ink/flowbind"
 url: "https://azimuth.ink"
 keywords:
